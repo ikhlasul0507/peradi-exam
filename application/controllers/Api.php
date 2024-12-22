@@ -22,6 +22,16 @@ class Api extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('App_model', 'app_model');
+		 // Apply CORS headers for this controller
+		 header("Access-Control-Allow-Origin: *");
+		 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+		 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+	 
+		 // Handle OPTIONS preflight request
+		 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			 http_response_code(200);  // Respond OK for OPTIONS
+			 exit;
+		 }
 	}
 
 	public function output_json($data, $encode = true)
