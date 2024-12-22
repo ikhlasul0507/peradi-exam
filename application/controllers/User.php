@@ -74,6 +74,44 @@ class User extends CI_Controller {
 	    $this->output_json($result);
 	}
 
+	public function sendDataListNewUser()
+	{
+		// Decode the raw POST data into an associative array
+		$postData = json_decode(file_get_contents('php://input'), true); // This will read the entire raw input
+		$result = [];
+		$totalData = 0;
+		$totalDataExsit = 0;
+		// Check if data exists
+		if ($postData && isset($postData['value'])) {
+			foreach ($postData['value'] as $userData) { // Assuming 'value' is an array of user data
+				// Add IP address and hash the password
+				$checkDataUserExist = $this->app_model->getListDataByColumnGeneral('users','id_user_master',$userData['id_user_master']);
+				if(!$checkDataUserExist){
+					$userData['ip_address'] = getHostByName(getHostName());
+					$userData['password'] = password_hash($userData['password'], PASSWORD_DEFAULT);
+					$userData['isAdmin'] = 'N'; // Set default 'isAdmin' to 'N'
+
+					// Insert data into the database
+					$send = $this->app_model->create('users', $userData);
+					if ($send) {
+						$totalData++;
+					}
+				}else{
+					$totalDataExsit++;
+				}
+			}
+
+			// Return success response with the total data
+			$result = ['totalDataExam' => $totalData,'totalDataExsit' => $totalDataExsit,'status_code' => 200];
+			$this->output_json($result);
+		} else {
+			// If no data is passed, return an error response
+			$result = ['totalDataExam' => 0, 'status_code' => 400,];
+			$this->output_json($result);
+		}
+	}
+
+
 	public function loginUser()
 	{
 		date_default_timezone_set('Asia/Tokyo');

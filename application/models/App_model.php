@@ -29,10 +29,15 @@ class App_model extends CI_Model
     }
 
     public function delete($table, $data, $pk)
-    {
+    {   
         $this->db->where_in($pk, $data);
         return $this->db->delete($table);
     }
+
+    function getWhere($table, $data)
+	{
+		return $this->db->get_where($table,$data)->row_array();
+	}
 
     public function getListDataByColumnGeneral($table, $kolom, $value_kolom)
     {
@@ -76,7 +81,7 @@ class App_model extends CI_Model
                                           m_questions q,
                                           m_course c
                                         WHERE q.`id_course` = c.`id_course`
-                                        AND $kolom_search = '$value_search'")->result_array();
+                                        AND $kolom_search = '$value_search' ORDER BY RAND()")->result_array();
         } else if ($kolom_search != null && $type_search == 'list_to' && $value_search != null){
             $idAnswer = json_decode($value_search['id_answer']);
             $idUser = json_decode($value_search['id_users']);
@@ -130,6 +135,7 @@ class App_model extends CI_Model
         }
         return $result;
     }
+
     public function getListDataMyPackages($kolom_search = null, $type_search = null, $value_search = null)
     {
         if ($kolom_search != null && $type_search == 'equals' && $value_search != null){
@@ -154,5 +160,24 @@ class App_model extends CI_Model
             return $data;
         }
 
+    }
+
+    public function getDataAllAnswers()
+    {
+        $query = "SELECT 
+                        ls.id_users, 
+                        MAX(ls.value_answers) AS score, 
+                        us.id_user_master,
+                        mc.course_name
+                    FROM 
+                        list_answers ls
+                    INNER JOIN 
+                        users us ON ls.id_users = us.id_users
+                    INNER JOIN 
+                        m_course mc ON ls.id_course = mc.id_course
+                    GROUP BY 
+                        ls.id_users, us.id_user_master";
+
+        return $this->db->query($query)->result_array();
     }
 }
