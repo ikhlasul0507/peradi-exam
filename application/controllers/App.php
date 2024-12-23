@@ -35,7 +35,7 @@ class App extends CI_Controller {
 
 	public function index()
 	{
-		$this->dashboard();
+		$this->t_tryout();
 	}
 
 	public function dashboard()
