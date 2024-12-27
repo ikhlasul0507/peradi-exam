@@ -284,9 +284,6 @@
         }, 1000);
 
         countDownTimer = () => {
-          if(menit < 1) {
-            $('#bg-timer').addClass("bg-danger blink");
-          }
           if (detik < 1) {
             detik = 59;
             menit--;
@@ -335,7 +332,7 @@
                 Swal.fire({
                   title: "Auto close alert!",
                   html: "I will close in <b></b> milliseconds.",
-                  timer: 5000,
+                  timer: 1000,
                   timerProgressBar: true,
                   didOpen: () => {
                     Swal.showLoading();
