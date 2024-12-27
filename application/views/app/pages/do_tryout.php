@@ -292,7 +292,7 @@
                 jam--;  
                 if (jam < 0) {
                   clearInterval();
-                  alert("waktu habis");
+                  alert("Mohon maaf, waktu anda habis");
                   submitAllAnswer();
                 }
               }
