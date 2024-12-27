@@ -149,10 +149,9 @@
       }
 
       getIDFromURL = () => {
-          var arrUrl = window.location.href.split("/");
-          return arrUrl[6].trim();
+          var arrUrl = window.location.href.split("/");  // Split the URL by '/'
+          return arrUrl[arrUrl.length - 1];  // Get the last part, which is '4'
       }
-
       validateAdd = () => {
         let coursename = document.getElementById("course-name").value;
         let coursestatus = document.getElementById("course-status").value;
