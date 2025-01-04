@@ -74,6 +74,7 @@ class App_model extends CI_Model
                                           q.`option_c`,
                                           q.`option_d`,
                                           q.`option_e`,
+                                          q.`question_type`,
                                           c.`course_name`,
                                           c.`course_duration`,
                                           c.`id_course`

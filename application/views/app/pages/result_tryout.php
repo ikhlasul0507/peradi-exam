@@ -1,4 +1,4 @@
-  <main class="main-content position-relative border-radius-lg ">
+<main class="main-content position-relative border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
       <div class="container-fluid py-0 px-3">
@@ -504,10 +504,10 @@
                   var hitungA = 0;
                 }else{
                   var hitungA = (parseInt(header.value_answers) / parseInt(header.good_answers));
-                  totalScore = ( hitungA * (parseInt(header.good_answers) + parseInt(header.wrong_answers)))
+                  // totalScore = ( hitungA * (parseInt(header.good_answers) + parseInt(header.wrong_answers)))
                 }
           }else{
-              totalScore = header.value_answers
+              // totalScore = header.value_answers
           }
           if(data.length > 0) {
             var lengthData = data.length;
@@ -518,6 +518,7 @@
             var endTemp = '</ul>';
             for (var i = 1; i <= data.length; i++) {
               duration = parseInt(data[i-1].course_duration);
+              totalScore += parseInt(data[i-1].bobot);
               timeLocalStorage.id_course = data[i-1].id_course;
               Object.assign(resultLocalStorage, { [`${data[i-1].id_questions}-answer-${i}`] : null});
               if (i < 10) {
@@ -534,11 +535,31 @@
                   }else{
                      var active = "";
                   }
-                  if(data[i-1].answer == list_answers[`${data[i-1].id_questions}-answer`]){
-                    var bganswer = "bg-success";
-                  }else{
-                    var bganswer = "bg-danger";
-                  }
+                  var arrAns = list_answers[`${data[i-1].id_questions}-answer`];
+
+// Check if arrAns is a valid string
+if (arrAns && arrAns.includes("~")) {
+    arrAns = arrAns.split("~");  // Split by ~ if it exists
+} else {
+    // If no '~' found, arrAns will be a single string (or null/undefined, handle accordingly)
+    arrAns = arrAns ? [arrAns] : [];  // If arrAns is null or undefined, set it as an empty array
+}
+
+var valAns;  // Declare valAns outside the if block
+
+if (arrAns.length > 1) {
+    valAns = arrAns[0];  // Get the first part before the ~
+} else {
+    valAns = arrAns[0] || "";  // Use the original value if no ~ (arrAns only has one element), or empty string if arrAns is empty
+}
+
+var bganswer;  // Declare bganswer outside the condition
+if (data[i-1].answer == valAns) {
+    bganswer = "bg-success";  // Correct answer
+} else {
+    bganswer = "bg-danger";  // Incorrect answer
+}
+
                   valTemp += '<li class="nav-item border">'+
                             '<a class="nav-link mb-0 px-0 py-1 d-flex '+bganswer+' '+active+' align-items-center justify-content-center " id="number-'+i+'"  data-bs-toggle="tab" href="javascript:;" onclick="checkData('+i+')" role="tab" aria-selected="false" >'+
                               '<i class="ni ni-app"></i>'+
@@ -599,6 +620,10 @@
               if(data[i-1].answer === "E"){
                   btnE = "bg-success";
               }
+              var questionType = data[i-1].question_type;
+              console.log(questionType);
+              var yourANSwer = list_answers[`${data[i-1].id_questions}-answer`] === null ? "Tidak Jawab" : list_answers[`${data[i-1].id_questions}-answer`];
+              if (questionType === "C") { // Multiple Choice selected
               resultQuestion += '<div class="tab-pane fade '+active+'" id="question-'+i+'" role="tabpanel" aria-labelledby="pills-home-tab">'+
                                   '<div class="col-md-12 mt-4">'+
                                       '<div class="card h-100 mb-4">'+
@@ -656,7 +681,7 @@
                                         '<div class="card-header border pb-0 px-3">'+
                                           '<div class="row">'+
                                             '<div class="col-md-12">'+
-                                              '<h6 class="mb-0 '+bganswer+'">Your answer : ('+list_answers[`${data[i-1].id_questions}-answer`]+')</h6>'+
+                                              '<h6 class="mb-0 '+bganswer+'">Your answer : ('+yourANSwer+')</h6>'+
                                               '<h6 class="mb-0">Discussion : ('+data[i-1].answer+')</h6>'+
                                               '<h6 class="mb-0">'+ data[i-1].discussion+'</h6>'+
                                             '</div>'+
@@ -665,6 +690,33 @@
                                       '</div>'+
                                     '</div>'+
                                 '</div>';
+              }else{
+                resultQuestion += '<div class="tab-pane fade '+active+'" id="question-'+i+'" role="tabpanel" aria-labelledby="pills-home-tab">'+
+                                  '<div class="col-md-12 mt-4">'+
+                                      '<div class="card h-100 mb-4">'+
+                                        '<div class="card-header border pb-0 px-3">'+
+                                          '<div class="row">'+
+                                            '<div class="col-md-12">'+
+                                              '<h6 class="mb-0">'+ data[i-1].question_description+'</h6>'+
+                                            '</div>'+
+                                          '</div>'+
+                                        '</div>'+
+                                        '<div class="card-header border pb-0 px-3">'+
+                                          '<div class="row">'+
+                                            '<div class="col-md-12">'+
+                                              '<h6 class="mb-0 '+bganswer+'">Your answer :</h6>'+
+                                              '<div class="col-lg-12">'+
+                                                  '  <textarea class="form-control" rows="6" placeholder="Write your message here" disabled>'+list_answers[`${data[i-1].id_questions}-answer`].split("~")[1]+'</textarea>'+
+                                                '</div>'+
+                                              '<h6 class="mb-0">Discussion :</h6>'+
+                                              '<h6 class="mb-0">'+ data[i-1].discussion+'</h6>'+
+                                            '</div>'+
+                                          '</div>'+
+                                        '</div>'+
+                                      '</div>'+
+                                    '</div>'+
+                                '</div>';
+              }
             }
           }
           localStorage.setItem("question-temporary", JSON.stringify(resultLocalStorage)); 

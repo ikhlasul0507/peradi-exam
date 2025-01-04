@@ -570,8 +570,14 @@ class App extends CI_Controller {
 		$count = 1;
 		foreach ($query as $key) {
 			$keyData = $key["id_questions"].'-answer';
-			$ansval = $data['list_answers'][$keyData];
-			if ($ansval == $key['answer']) {
+			$ansval = explode('~', $data['list_answers'][$keyData]);
+
+			if(count($ansval) > 1) {
+				$ansValOnly = $ansval[0];  // Get the first part
+			} else {
+				$ansValOnly = $data['list_answers'][$keyData];  // If there's no `~`, keep the original value
+			}
+			if ($ansValOnly == $key['answer']) {
 				$good_answers++;
 				$value_answers += (1 * $key['bobot']);
 			}else{

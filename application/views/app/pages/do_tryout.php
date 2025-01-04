@@ -1,4 +1,4 @@
-  <main class="main-content position-relative border-radius-lg " id="main-content">
+<main class="main-content position-relative border-radius-lg " id="main-content">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
       <div class="container-fluid py-0 px-3">
@@ -451,7 +451,15 @@
       submitAnswer = (id) => {
         var tempData = JSON.parse(localStorage.getItem("question-temporary"));
         var arrID = id.split("-");
-        tempData = {...tempData, [`${arrID[0]}-answer-${arrID[2]}`] : arrID[3]}
+        console.log(arrID);
+        var setValue = '';
+        if(arrID.length > 4){
+            getIDText = `#${arrID[0]}-essai`;
+            setValue = arrID[3] + '~'+ $(getIDText).val();
+        }else{
+            setValue = arrID[3];
+        }
+        tempData = {...tempData, [`${arrID[0]}-answer-${arrID[2]}`] : setValue}
         $("#number-"+arrID[2]).removeClass("bg-light");
         $("#number-"+arrID[2]).addClass("bg-warning");
         localStorage.setItem("question-temporary", JSON.stringify(tempData)); 
@@ -587,6 +595,9 @@
               }else{
                  var active = "";
               }
+              var questionType = data[i-1].question_type;
+              console.log(questionType);
+             if (questionType === "C") { // Multiple Choice selected
               resultQuestion += '<div class="tab-pane fade '+active+'" id="question-'+i+'" role="tabpanel" aria-labelledby="pills-home-tab">'+
                                   '<div class="col-md-12 mt-4">'+
                                       '<div class="card h-100 mb-4">'+
@@ -644,6 +655,35 @@
                                       '</div>'+
                                     '</div>'+
                                 '</div>';
+             }else{
+              resultQuestion += '<div class="tab-pane fade '+active+'" id="question-'+i+'" role="tabpanel" aria-labelledby="pills-home-tab">'+
+                                  '<div class="col-md-12 mt-4">'+
+                                      '<div class="card h-100 mb-4">'+
+                                        '<div class="card-header border pb-0 px-3">'+
+                                          '<div class="row">'+
+                                            '<div class="col-md-12">'+
+                                              '<h6 class="mb-0">'+ data[i-1].question_description+'</h6>'+
+                                            '</div>'+
+                                          '</div>'+
+                                        '</div>'+
+                                        '<div class="card-body pt-4 p-3">'+
+                                          '<ul class="list-group">'+
+                                          
+                                          '<div class="col-lg-12">'+
+                                                  '  <textarea class="form-control" id="'+data[i-1].id_questions+'-essai"  rows="6" placeholder="Write your message here"></textarea>'+
+                                                '</div>'+
+                                            '<li class="list-group-item border-0 d-flex justify-content-between ps-0 border-radius-lg" onclick="submitAnswer(\''+data[i-1].id_questions+'-answer-'+i+'-A-essay\')" style="cursor: pointer;">'+
+                                              '<div class="align-items-center">'+
+                                                '<p><button id="btn-'+data[i-1].id_questions+'-answer-'+i+'-A" class="btn btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">Simpan Essai</button></p>'+
+                                               
+                                              '</div>'+
+                                            '</li>'+
+                                          '</ul>'+
+                                        '</div>'+
+                                      '</div>'+
+                                    '</div>'+
+                                '</div>';
+             }
             }
           }
           localStorage.setItem("question-temporary", JSON.stringify(resultLocalStorage)); 
