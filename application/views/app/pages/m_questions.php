@@ -1,4 +1,4 @@
-  <main class="main-content position-relative border-radius-lg ">
+<main class="main-content position-relative border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
       <div class="container-fluid py-1 px-3">
@@ -370,66 +370,78 @@
         var result = "";
         if(data.length > 0) {
           for (var i = 0; i < data.length; i++) {
-            result += '<li class="list-group-item border-0 d-flex p-1 bg-gray-100 border-radius-lg">'+
-                        '<div class="d-flex flex-column">'+
-                          '<h6>('+(i+1)+') - '+data[i].course_name+' - Jawaban ('+data[i].answer+')-('+data[i].bobot+')</h6>'+
-                          '<p class="mb-1 text-sm ">'+data[i].question_description+'</p>'+
-                          '<div class="d-flex py-1">'+
-                            '<div>'+
-                          '</div>'+
-                              '<div class="card-body p-1">'+
-                                '<div class="row">'+
-                                  '<div class="col-md-10 mb-2">'+
-                                    '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
-                                      '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">A</button>'+
-                                      '<div class="align-self-center">' +
-                                      '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_a+'</h6>'+
-                                      '</div>'+
-                                    '</div>'+
-                                  '</div>'+
-                                  '<div class="col-md-10 mb-2">'+
-                                    '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
-                                      '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">B</button>'+
-                                      '<div class="align-self-center">' +
-                                      '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_b+'</h6>'+
-                                      '</div>'+
-                                    '</div>'+
-                                  '</div>'+
-                                  '<div class="col-md-10 mb-2">'+
-                                    '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
-                                      '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">C</button>'+
-                                      '<div class="align-self-center">' +
-                                      '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_c+'</h6>'+
-                                      '</div>'+
-                                    '</div>'+
-                                  '</div>'+
-                                  '<div class="col-md-10 mb-2">'+
-                                    '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
-                                      '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">D</button>'+
-                                      '<div class="align-self-center">' +
-                                      '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_d+'</h6>'+
-                                      '</div>'+
-                                    '</div>'+
-                                  '</div>'+
-                                  '<div class="col-md-10 mb-2">'+
-                                    '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
-                                      '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">E</button>'+
-                                      '<div class="align-self-center">' +
-                                      '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_e+'</h6>'+
-                                      '</div>'+
-                                    '</div>'+
-                                  '</div>'+
-                                '</div>'+
-                              '</div>'+
+            var labelJawaban = (data[i].question_type === 'C') ? data[i].answer : 'Essay';
+    result += '<li class="list-group-item border-0 d-flex p-1 bg-gray-100 border-radius-lg">'+
+                '<div class="d-flex flex-column">'+
+                  // Flex container for question description and buttons
+                  '<div class="d-flex justify-content-between align-items-center mb-2">'+
+                    // Question description section
+                    '<div class="flex-grow-1">'+
+                      '<h6>('+(i+1)+') - '+data[i].course_name+' - Jawaban ('+labelJawaban+')-('+data[i].bobot+')</h6>'+
+                      '<p class="mb-1 text-sm">'+data[i].question_description+'</p>'+
+                    '</div>'+
+                    // Buttons section (Edit and Delete)
+                    '<div class="ms-3 d-flex">'+
+                      '<a class="btn btn-link text-danger text-gradient px-3 mb-0" onclick="deleteData('+data[i].id_questions+')">'+
+                        '<i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete</a>'+
+                      '<a class="btn btn-link text-dark px-3 mb-0" href="<?= base_url() ?>questions/edit/'+data[i].id_questions+'">'+
+                        '<i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>'+
+                    '</div>'+
+                  '</div>'+
+                  // Answer section, shown only if the question type is "C"
+                  '<div class="d-flex py-1">';
+    if (data[i].question_type === 'C') {
+        result += '<div class="card-body p-1">'+
+                    '<div class="row">'+
+                      // Each option is in a row for answers A, B, C, D, and E
+                      '<div class="col-md-10 mb-2">'+
+                        '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
+                          '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">A</button>'+
+                          '<div class="align-self-center">' +
+                          '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_a+'</h6>'+ 
                           '</div>'+
                         '</div>'+
-                        '<div class="ms-auto text-end">'+
-                          '<a class="btn btn-link text-danger text-gradient px-3 mb-0" onclick="deleteData('+data[i].id_questions+')">'+
-                            '<i class="far fa-trash-alt me-2" aria-hidden="true"></i>Delete</a>'+
-                            '<a class="btn btn-link text-dark px-3 mb-0" href="<?= base_url() ?>questions/edit/'+data[i].id_questions+'"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>'+
+                      '</div>'+
+                      '<div class="col-md-10 mb-2">'+
+                        '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
+                          '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">B</button>'+
+                          '<div class="align-self-center">' +
+                          '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_b+'</h6>'+ 
                           '</div>'+
-                      '</li>';
-          }
+                        '</div>'+
+                      '</div>'+
+                      '<div class="col-md-10 mb-2">'+
+                        '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
+                          '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">C</button>'+
+                          '<div class="align-self-center">' +
+                          '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_c+'</h6>'+ 
+                          '</div>'+
+                        '</div>'+
+                      '</div>'+
+                      '<div class="col-md-10 mb-2">'+
+                        '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
+                          '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">D</button>'+
+                          '<div class="align-self-center">' +
+                          '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_d+'</h6>'+ 
+                          '</div>'+
+                        '</div>'+
+                      '</div>'+
+                      '<div class="col-md-10 mb-2">'+
+                        '<div class="d-flex align-items-center border card-plain border-radius-lg">'+
+                          '<button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">E</button>'+
+                          '<div class="align-self-center">' +
+                          '<h6 class="text-sm ml-3 justify-content-center">'+data[i].option_e+'</h6>'+ 
+                          '</div>'+
+                        '</div>'+
+                      '</div>'+
+                    '</div>'+
+                  '</div>';
+    }
+    result += '</div>'+ // End answer section
+              '</div>'+ // End flex column container
+            '</li>';
+}
+
         }
         document.getElementById('count-list').innerHTML = 'List Questions - ' + data.length;
         document.getElementById('data-list').innerHTML = result;

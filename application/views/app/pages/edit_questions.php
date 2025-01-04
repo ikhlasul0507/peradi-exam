@@ -1,4 +1,4 @@
-  <main class="main-content position-relative border-radius-lg ">
+<main class="main-content position-relative border-radius-lg ">
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
@@ -34,6 +34,15 @@
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="example-text-input" class="form-control-label">Question Type</label>
+                            <select class="form-control" id="question-type">
+                              <option value="C" selected>Multiple Choice</option>
+                              <option value="E">Essay</option>
+                            </select>
+                          </div>
+                        </div>
+                      <div class="col-md-12">
                         <div class="form-group">
                           <label for="example-text-input" class="form-control-label">Course Category</label>
                           <select class="form-control" id="id_course">
@@ -48,7 +57,7 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="example-text-input" class="form-control-label">Answer</label>
+                          <label for="example-text-input" class="form-control-label" id="answer-label">Answer</label>
                           <select class="form-control" id="answer">
                             <option value="" selected disabled>--Choose--</option>
                             <option value="A">A</option>
@@ -67,44 +76,48 @@
                       </div>
                       
                     </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="example-text-input" class="form-control-label">Answer (A)</label>
-                          <div id="course-answer-a" class="container"></div> 
+                     <!-- Answer choices for Multiple Choice -->
+                     <div class="row" id="multiple-choice-answers">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="example-text-input" class="form-control-label">Answer (A)</label>
+                            <div id="course-answer-a" class="container"></div> 
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="example-text-input" class="form-control-label">Answer (B)</label>
+                            <div id="course-answer-b" class="container"></div> 
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="example-text-input" class="form-control-label">Answer (C)</label>
+                            <div id="course-answer-c" class="container"></div> 
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="example-text-input" class="form-control-label">Answer (D)</label>
+                            <div id="course-answer-d" class="container"></div> 
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="example-text-input" class="form-control-label">Answer (E)</label>
+                            <div id="course-answer-e" class="container"></div> 
+                          </div>
                         </div>
                       </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="example-text-input" class="form-control-label">Answer (B)</label>
-                          <div id="course-answer-b" class="container"></div> 
+                       <!-- Discussion -->
+                       <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label for="example-text-input" class="form-control-label">Discussion</label>
+                            <div id="course-discussion" class="container"></div> 
+                          </div>
                         </div>
                       </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="example-text-input" class="form-control-label">Answer (C)</label>
-                          <div id="course-answer-c" class="container"></div> 
-                        </div>
-                      </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="example-text-input" class="form-control-label">Answer (D)</label>
-                          <div id="course-answer-d" class="container"></div> 
-                        </div>
-                      </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="example-text-input" class="form-control-label">Answer (E)</label>
-                          <div id="course-answer-e" class="container"></div> 
-                        </div>
-                      </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="example-text-input" class="form-control-label">Discussion</label>
-                          <div id="course-discussion" class="container"></div> 
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -121,6 +134,20 @@
 
       $(document).ready(function () {
         showListData();
+      });
+
+      document.getElementById("question-type").addEventListener("change", function() {
+        var questionType = this.value;
+        
+        if (questionType === "E") { // Essay selected
+          document.getElementById("multiple-choice-answers").style.display = "none";
+          document.getElementById("answer").style.display = "none";
+          document.getElementById("answer-label").style.display = "none";
+        } else if (questionType === "C") { // Multiple Choice selected
+          document.getElementById("multiple-choice-answers").style.display = "block";
+          document.getElementById("answer").style.display = "block";
+          document.getElementById("answer-label").style.display = "block";
+        }
       });
 
       document.getElementById('btn-create-list').addEventListener("click", function() {
@@ -196,7 +223,17 @@
           $("#questions-description").summernote('code',data.question_description);
           $("#course-discussion").summernote('code',data.discussion);
           $("#answer").val(data.answer);
+          $("#question-type").val(data.question_type);
           showListDataCourse(data.id_course);
+          if (data.question_type === "E") { // Essay selected
+            document.getElementById("multiple-choice-answers").style.display = "none";
+            document.getElementById("answer").style.display = "none";
+            document.getElementById("answer-label").style.display = "none";
+          } else if (data.question_type === "C") { // Multiple Choice selected
+            document.getElementById("multiple-choice-answers").style.display = "block";
+            document.getElementById("answer").style.display = "block";
+            document.getElementById("answer-label").style.display = "block";
+          }
       }
 
       getIDFromURL = () => {
@@ -222,36 +259,68 @@
         let id_course = document.getElementById("id_course").value;
         let bobot = document.getElementById("bobot").value;
         let answer = document.getElementById("answer").value;
+        let questionType = document.getElementById("question-type").value;
 
-        let questionsdescription = $('#questions-description').summernote('isEmpty');
-        let courseanswer_a = $('#course-answer-a').summernote('isEmpty');
-        let courseanswer_b = $('#course-answer-b').summernote('isEmpty');
-        let courseanswer_c = $('#course-answer-c').summernote('isEmpty');
-        let courseanswer_d = $('#course-answer-d').summernote('isEmpty');
-        let courseanswer_e = $('#course-answer-e').summernote('isEmpty');
-        let coursediscussion = $('#course-discussion').summernote('isEmpty');
+        if (questionType === "C") { // Essay selected
+            let questionsdescription = $('#questions-description').summernote('isEmpty');
+            let courseanswer_a = $('#course-answer-a').summernote('isEmpty');
+            let courseanswer_b = $('#course-answer-b').summernote('isEmpty');
+            let courseanswer_c = $('#course-answer-c').summernote('isEmpty');
+            let courseanswer_d = $('#course-answer-d').summernote('isEmpty');
+            let courseanswer_e = $('#course-answer-e').summernote('isEmpty');
+            let coursediscussion = $('#course-discussion').summernote('isEmpty');
 
-        console.log(questionsdescription);
-        let result = "";
-        if (id_course === "" || bobot === "" || answer === "" || questionsdescription || courseanswer_a  || courseanswer_b  || courseanswer_c  || courseanswer_d  || courseanswer_e || coursediscussion){
-          alertShow("Please input all data","error");
-        }else{
-            let data = {
-              id_course : id_course,
-              id_users : '<?= $this->session->userdata('id_users');?>',
-              question_description : $('#questions-description').summernote('code'),
-              bobot : bobot,
-              option_a : $('#course-answer-a').summernote('code'),
-              option_b : $('#course-answer-b').summernote('code'),
-              option_c : $('#course-answer-c').summernote('code'),
-              option_d : $('#course-answer-d').summernote('code'),
-              option_e : $('#course-answer-e').summernote('code'),
-              discussion : $('#course-discussion').summernote('code'),
-              answer : answer
+            console.log(questionsdescription);
+            let result = "";
+            if (id_course === "" || bobot === "" || questionType === "" || answer === "" || questionsdescription || courseanswer_a  || courseanswer_b  || courseanswer_c  || courseanswer_d  || courseanswer_e || coursediscussion){
+              alertShow("Please input all data","error");
+            }else{
+                let data = {
+                  id_course : id_course,
+                  id_users : '<?= $this->session->userdata('id_users');?>',
+                  question_description : $('#questions-description').summernote('code'),
+                  bobot : bobot,
+                  option_a : $('#course-answer-a').summernote('code'),
+                  option_b : $('#course-answer-b').summernote('code'),
+                  option_c : $('#course-answer-c').summernote('code'),
+                  option_d : $('#course-answer-d').summernote('code'),
+                  option_e : $('#course-answer-e').summernote('code'),
+                  discussion : $('#course-discussion').summernote('code'),
+                  answer : answer,
+                  question_type : questionType
+                }
+                result = data;
             }
-            result = data;
+            
+            return result;
+        } else if (questionType === "E") { // Multiple Choice selected
+            let questionsdescription = $('#questions-description').summernote('isEmpty');
+            let coursediscussion = $('#course-discussion').summernote('isEmpty');
+
+            let result = "";
+            if (id_course === "" || bobot === "" || questionType === ""
+            || questionsdescription || coursediscussion){
+              alertShow("Please input all data","error");
+            }else{
+                let data = {
+                  id_course : id_course,
+                  id_users : '<?= $this->session->userdata('id_users');?>',
+                  question_description : $('#questions-description').summernote('code'),
+                  bobot : bobot,
+                  option_a : '',
+                  option_b : '',
+                  option_c : '',
+                  option_d : '',
+                  option_e : '',
+                  discussion : $('#course-discussion').summernote('code'),
+                  answer : 'A',
+                  question_type : questionType
+                }
+                result = data;
+            }
+            
+            return result;
         }
-        return result;
       }
       createToList = () => {
         var valid = validateAdd();
